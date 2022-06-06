@@ -23,9 +23,9 @@
  * Define Global Variables
  * 
 */
-const menu = document.getElementById("menu");
-const sections = [...document.querySelectorAll(".section")]
-
+const sections = Array.from(document.querySelectorAll('section'));
+const menu = document.getElementById('navbar__list');
+let NumberOfListItems = sections.length;
 
 
 
@@ -34,21 +34,44 @@ const sections = [...document.querySelectorAll(".section")]
  * Start Helper Functions
  * 
 */
+function createListItem(){
+  for (section of sections){
+    sectionName = section.getAttribute('data-nav');
+    sectionLink = section.getAttribute('id');
+    //create an item for each section
+    listItem = document.createElement('li');
+    //add text to item
+    listItem.innerHTML = `<a class='menu__link' href='#${sectionLink}'>${sectionName}</a>`;
 
-const nav_menu_items = () => {
-    let nav_menu_container = '';
+    //add listitem to menu
+    menu.appendChild(listItem);
 
- sections.forEach(section => {
+  }
+}
 
-       const sectionID = section.id;
-       const sectionAtrribute = section.dataset.nav;
-       nav_menu_container += `<li> <a class="menu_item_link" href="#${sectionID}">${sectionAtrribute}</a></li>`   
-     })
- menu.innerHTML=nav_menu_container;
+ //Determines if section is in viewport
+ function sectionInViewPort(elem)
+ {
+   let sectionPos = elem.getBoundingClientRect();
+   return (sectionPos.top >= 0);
  }
- nav_menu_items();
 
- 
+ //gives the secion being viewed a different appearance
+ function toggleActiveClass(){
+   for(section of sections){
+     //if section is in viewport
+     if(sectionInViewPort(section)){
+       //check if it doesn't already contain "your-active-class"
+       if(! section.classList.contains('your-active-class')){
+         //then add it 
+         section.classList.add('your-active-class');
+       }
+      }
+      else {//if it is out of the viewport then remove "your-active-class"
+         section.classList.remove('your-active-class');
+       }
+      }
+    }
 
 /**
  * End Helper Functions
@@ -57,12 +80,13 @@ const nav_menu_items = () => {
 */
 
 // build the nav
-document.getElementsByClassName("page__header").innerT=""
+createListItem();
+
 
 
 // Add class 'active' to section when near top of viewport
 
-
+document.addEventListener('scroll' , toggleActiveClass);
 // Scroll to anchor ID using scrollTO event
 
 
